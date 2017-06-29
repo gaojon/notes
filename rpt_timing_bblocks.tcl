@@ -1,7 +1,7 @@
 # example
 # rpt_timing_bblcoks hierachy
 # rpt_timing_bblock u_pl_top/u_dpd/u_dpd_for_single_a0 500 10
-proc rpt_timing_bblock { module_name max_paths slack} {
+proc rpt_timing_bblock { module_name max_paths slack  {
 
 	if {[info exist path_start_bram]} {unset path_start_bram	}
 	if {[info exist path_end_bram  ]} {unset path_end_bram  	}
