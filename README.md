@@ -1,1 +1,1 @@
-# Xilinx Deephi DECENT/DNNC env setup 
+# Just some notes for your reference
