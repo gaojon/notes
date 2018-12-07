@@ -14,26 +14,8 @@ If you see following output, it means the Alveo boards have already been detecte
             Flags: bus master, fast devsel, latency 0, IRQ 11
             Memory at f2000000 (32-bit, non-prefetchable) [size=32M]
             Memory at f4020000 (32-bit, non-prefetchable) [size=64K]
-            Capabilities: [40] Power Management version 3
-            Capabilities: [60] MSI-X: Enable- Count=33 Masked-
-            Capabilities: [70] Express Endpoint, MSI 00
-            Capabilities: [100] Advanced Error Reporting
-            Capabilities: [1c0] #19
-            Capabilities: [350] Vendor Specific Information: ID=0001 Rev=1 Len=02c <?>
-            Capabilities: [400] Access Control Services
-            Kernel modules: xocl
     
-    d8:00.1 Processing accelerators: Xilinx Corporation Device 5000
-            Subsystem: Xilinx Corporation Device 000e
-            Flags: bus master, fast devsel, latency 0
-            Memory at f0000000 (32-bit, non-prefetchable) [size=32M]
-            Memory at f4000000 (32-bit, non-prefetchable) [size=128K]
-            Capabilities: [40] Power Management version 3
-            Capabilities: [60] MSI-X: Enable- Count=33 Masked-
-            Capabilities: [70] Express Endpoint, MSI 00
-            Capabilities: [100] Advanced Error Reporting
-            Capabilities: [400] Access Control Services
-            Kernel modules: xclmgmt
+  
 
 ## Install the XRT
 Go to following link to download Xilinx runtime (XRT) and Deployment shell (DSA)
