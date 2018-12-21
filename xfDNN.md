@@ -1,4 +1,5 @@
 # xfDNN environment installation with Alveo boards on UBUNTU 16.4
+## This was for xfDNN v1.2 . On the xfDNN v1.3, the overlay bug has been fixed.
 ## Install the Alevo U200 board
 Power down the server and make sure you are ESD free to avoid potential hardware damage happening. 
 
