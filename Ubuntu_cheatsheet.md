@@ -45,7 +45,7 @@ This command will add user ubuntu with default bash shell
 Install the vncserver as your preferences and fluxbox
 
     sudo apt-get install fluxbox
-	sudo apt-get install xtightvncviewer
+	sudo apt-get install tightvnc-server
 	
 Create xstartup file in .vnc
 
@@ -60,6 +60,26 @@ Start the vncserver
      vncserver -geometry 1980x1020 :58
 	 
 You may need to open for firewall for incoming vnc connections	
+
+
+# service management
+
+Use this command to set service start at boot time
+    sudo systemctl enable docker
+	
+	
+# disk space management
+
+    du -sh ./*
+	
+# enable sudo with user env
+    sudo visudo
+    #Default env_reset
+    #Default secure_path=""
+
+# search installed packages
+    sudo apt search xxxx
+	sudo apt list ;	list all installed packages
 	
 	
 
