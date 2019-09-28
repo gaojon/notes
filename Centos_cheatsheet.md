@@ -49,10 +49,15 @@ Open pors for VNC
 	systemctl disable service
 	
 # yum install package management
-    yum list kernel* ;query instaled package
+    yum list installed |grep kernel* ;query installed package
 	yum info package ;query available package on repo
 	yum install
 	yum remove
+	yum localinstall local_package.rpm
+	
+# RPM 
+    rpm -ql package name
+	rpm -qa |grep package name
 
 
 # Install Nvidia driver
@@ -147,5 +152,15 @@ stop service
 	$sudo yum install google-chrome-stable
 	
 	
-
+# add user to sudoers
+    
+	usermod -aG wheel username
   
+# Install tkdiff
+   $yum install tkcvs
+   
+# install tcl
+   on centos 7.5. The tclsh will report version confliction. 
+   $sudo yum install tcl
+   $tclsh 
+   

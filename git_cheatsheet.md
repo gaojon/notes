@@ -35,7 +35,7 @@ Start tracking files
     git add --all
 Create your initial “snapshot”:
 
-    git commit –m 
+    git commit -a –m "some information"
 	
 Link the local repository to remote repository
 
@@ -51,7 +51,21 @@ Push the local repository to remote repository
 Show current status:
 
 	git status -s
-Create Archive without .git directory
+	
 
+# Create Archive without .git directory
+execute in the git project root directory
 	git archive -o relase.zip HEAD
 
+# rename the managed file
+    git mv old_name new_name
+	
+# tag managment
+	git tag -a v1.1 -m "my versin"	#create tag
+	git push origin --tags			#sync up the tag to remote server
+	git diff v01 v02				#compare differences between two tags
+	git tag							#list all tags
+	
+# clean untracked files
+	git clean -i  #interact with deleted file
+	git clean -n  #see what will be remove
