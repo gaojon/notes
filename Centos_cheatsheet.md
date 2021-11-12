@@ -211,7 +211,8 @@ stop service
     $sudo wget -O /etc/yum.repos.d/sea-devel.repo http://sea.fedorapeople.org/sea-devel.repo 
 	$sudo yum install notepadqq
 	
-# Use multi-threads download tools  	
+# Use multi-threads download tools  
+	$sudo yum install aria2
 	$aria2c URL
 	$aria2c --max-download-limit=500K	;limit max download speed
 	
@@ -327,11 +328,19 @@ Need to boot from USB live or rescue boot.
 `swpaon /dev/sda2`
 
 ## Step3 duplicate data from old partitions to new ones
+
 ```
 #mount /dev/sda1 /mnt/sda1
 #mount /dev/sdb1 /mnt/sdb1
 #xfsdump -l0 -J - /mnt/sdb1 | xfsrestore -J - /mnt/sda1
 ```
+
+
+Another option proved also working well 
+```
+#rsync -axHAWXS --numeric-ids --info=progress2 source target
+```
+
 repeat above steps to duplicate all the used partitions
 
 ## Step4 make new disk bootable
@@ -399,17 +408,6 @@ sudo vi /etc/fstab
 10.178.176.9:/opt                       /opt                    nfs       defaults                      0 0
 
 
-
-
-
-
-
-
-
-
-
-
-
 # NIS install
 ## NIS server
 
@@ -473,9 +471,115 @@ lsof
 
 
 # NTP
-ntpstat 	;check status
-ntpq -p
+install pacakge if it's not there
+
+$sudo yum install ntp -you
+$sudo systemctl start ntpd.service
+$sudo systemctl enable ntpd.service
+
+$sudo service ntpd status
+
+Force the NTP to sync up time with servers
+
+$sudo service ntpd stop
+$sudo ntpd -gq
+	-g – requests an update irrespective of the time offset
+	-q – requests the daemon to quit after updating the date from the ntp server.
+$sudo service ntpd start
 
 
 # Kill all process from one user
 killall --user name
+
+# Kill process using directory
+$fuser -km ./
+
+
+# substitution for SED and VIM
+
+
+```
+.	any character except new line
+*	matches 0 or more of the preceding characters, ranges or metacharacters .* matches everything including empty line
+\+	matches 1 or more of the preceding characters...
+```
+
+
+
+# write image to usb
+dd if=/mnt_nfsroot/sd_card.img of=/dev/mmcblk0 status=progress
+
+# See live dmesg log
+
+$sudo dmesg -wH
+
+
+# memory segment management
+
+$ipcs -m  	;list all shared memory segement
+$cat /proc/sys/kernel/shmmni		;list limitation of segement
+$wc -l /proc/sysvipc/shm			;show used segment
+$ipcrm shm 32768(shi_id)	
+$ipcs -m -i 32768		
+
+# change shmmni to bigger value
+
+$sudo sysctl -w kernel.shmmni=8196	;change it to bigger 
+
+
+# Work with kernel modules
+
+$lsmod |grep xdma 
+$insmod ../xdma/xdma.ko
+$rmmod xdma
+$modinfo ../xdma/xdma.ko 
+
+
+# Collect CPU and Memory related information
+
+$sudo dmidecode -t memory |grep Speed >ddr
+$sudo dmesg |grep MHz >cpu 
+
+
+# swtich different Python versions  
+
+ls /usr/bin/python*
+sudo update-alternatives --list python
+
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 1
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 2
+
+sudo update-alternatives --config python
+
+
+# mount dd img file and chagne content
+
+$fdisk ./*.img 
+
+print out partition
+
+~~~
+Disk ./sd_card.img: 4294 MB, 4294967296 bytes, 8388608 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x000992c7
+
+        Device Boot      Start         End      Blocks   Id  System
+./sd_card.img1   *        2048     2000895      999424   83  Linux
+./sd_card.img2         2000896     3145727      572416   83  Linux
+
+~~~
+
+get the start offset address in bytes = sector *512 Blocks
+
+$sudo mount -oloop,offset=1048576 ./sd_card.img /mnt/usb
+
+
+
+# dd create image with specific length
+
+This should be useful for partition without occupied whole disk
+
+$dd bs=512 count=26509312 if=/dev/sdk of=devsdk.img

@@ -54,11 +54,12 @@ Link the local repository to remote repository
 	git remote add origin URL(/opt/gitroot/project.git)
 	
 SSH server
-	username@srv:/home/git/root
+	username@srv/home/git/root
 	ssh://username@srv:port/path
 	
 Change the remote name
 	git remote set-url name new_url
+	git remote rename old new
 	
 Push the local repository to remote repository
 
@@ -73,7 +74,10 @@ Push the local repository to remote repository
 						;this will fetch and merge automatically
 	
 	git push <remote> <branch>
-	git remove show <remote>   ;show default pull/push tracked local branch
+	git remove show <remote>    ;show default pull/push tracked local branch
+	
+	git remote set-url origin https://username:PAT@github.com/Jonathanga
+o/scripts
 
 # push local branch to remote branch with different name
 	git push origin local-name:remote-name
@@ -107,7 +111,7 @@ Push the local repository to remote repository
 ## rename branch
 
 	git checkout old_branch
-	git branch -m new_branch
+	git branch -m new_branch		
 	git push origin new_branch
 	git push origin --delete old_branch
 	
@@ -119,6 +123,7 @@ Push the local repository to remote repository
 Show current status:
 
 	git status -s
+	git status --untracked-files=no  
 	
 
 # Create Archive without .git directory
@@ -183,6 +188,8 @@ execute in the git project root directory
 	git log --oneline --decorate --graph --all 
 
 # Skipping the Staging Area
+
+
 # this will commit modified files and add automatically
 	git commit -a -m "asdfasdf" 
 	
@@ -198,6 +205,15 @@ execute in the git project root directory
 ##compare specific files in two diffrent branch
 	git diff master..20.1_v++ -- Makefile
 	git ..20.1_v++ 				;compare checkout one from another
+	
+# show the updated files from one commit 
+    git show --pretty="" --name-only e64f309a	;e64f309a is beginning strings
+
+# git stash
+	
+	git stash		;store your staged and unstaged files
+	git stash pop 	;pop and clean stashed files
+	git stash apply	;apply and save for next time use
 	
 	
 	
