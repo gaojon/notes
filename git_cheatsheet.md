@@ -11,7 +11,7 @@ Setup the env for the first time use
 
 ## Preferred editor
 
-    git config --global core.editor "'C:/Program Files (x86)/Notepad++/notepad++.exe' -multiInst -nosession¡°
+    git config --global core.editor "'C:/Program Files (x86)/Notepad++/notepad++.exe' -multiInst -nosession"
 
 ## Checking your settings
 
@@ -44,7 +44,11 @@ Start tracking files
 
     git add *.v
     git add *.vhd
-    git add --all
+    git add --all			;add all files include not managed files
+	git add -u :/			;Stage modified and deleted files only (all directory)
+	git add -u .			;Stage modified and deleted files only (current directory)
+	
+	
 Create your initial "snapshot"
 
     git commit -a –m "some information"
@@ -85,7 +89,7 @@ o/scripts
 # clone from another client
 
 	git clone URL(/opt/gitroot/project.git)
-	git clone ssh://jung@xnjws1/opt/ip_repo/bf_ifft_demo.git
+	git clone ssh://jung@xnjws1:/d1/repo/bf_ifft_demo.git
 	
 	
 # Branch management
@@ -97,6 +101,8 @@ o/scripts
 	git merge other_branch	;merge other_branch to current branch
 	
 	git branch -vv			;get branch infor of where is coming from
+	
+	git branch new_branch_name	;create new branch from current branch
 	
 ## checkout from remote repo
 	git checkout -b serverfix origin/serverfix
@@ -160,6 +166,7 @@ execute in the git project root directory
 
 ## Unstaging a Staged File
 	git reset HEAD file_name    ;file will not changed but just removed from previous staged files
+	git reset 					;remove all staged files
 	
 ## unmodify a modified file
 	git checkout file_name 		;this will remove your local copy of modified files

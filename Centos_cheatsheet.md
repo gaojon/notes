@@ -45,8 +45,13 @@ Open pors for VNC
 
     sudo firewall-cmd --add-port=5900-5999/tcp --permanent 
     sudo service firewalld restart
-	
 
+# VNC can't start and show server is already running as :xx
+	```
+	rm -f /tmp/.X0-lock
+	rm -f /tmp/.X11-unix/X0
+	```
+	
 # User management
     sudo adduser test	
 	sudo userdel test
@@ -194,6 +199,11 @@ stop service
 # Find current and child directory 
    $find ./ -name "*.xsa"
    
+   see the hidden directory size
+   
+   $find -maxdepth 1 -name "*" -exec du -sh {} \;   
+   $find ./ -size 
+   
 # Disable tracker daemon which CPU occupation is high
    $cd /etc/xdg/autostart
    $sudo vi tracker*
@@ -221,7 +231,9 @@ stop service
 	$md5sum the_name_of_your_file
 	
 # Display the partition UUID
-	$lsblk -f
+	$lsblk -fs
+	
+	This command also shows the file system of each partitions
 
 # Reset Centos root passwd
     Press "e" to edit boot entry
@@ -287,6 +299,26 @@ stop service
 
     $rsync -Pavz user@host:remote_file local_file 
 	$rsync -Pavz --delete   ;remote files not exist at source
+	$rsync -av --info=progress2 Source Target 
+	
+	$rsync -av --exclude 'testfile1.txt' sourcedir/ destinationdir/
+	
+	a 				archive (get all attribution)
+	v				verbosity
+	z				compress
+	P 				show progress 
+	
+	-x, --one-file-system       don't cross filesystem boundaries
+	--write-batch=foo			create batch file
+	-c, --checksum              skip based on checksum, not mod-time & size
+	-I, --ignore-times          don't skip files that match size and time
+	--size-only             skip files that match in size
+	--info=progress2	
+						There is also a --info=progress2 option that outputs statistics based  on
+						the  whole transfer, rather than individual files
+						
+	-L, --copy-links            transform symlink into referent file/dir
+					
 	
 # Ignore big files and files without readable permission
 notes: The exclude file list is relative path to the current pmd directory
@@ -470,7 +502,7 @@ group:      nis files sss
 lsof 
 
 
-# NTP
+# NTP (NTPD is obsolete with centos, chronyd is prefered
 install pacakge if it's not there
 
 $sudo yum install ntp -you
@@ -487,6 +519,59 @@ $sudo ntpd -gq
 	-q – requests the daemon to quit after updating the date from the ntp server.
 $sudo service ntpd start
 
+$sudo systemctl status ntpd.service
+
+
+# NTP for chronyd
+
+$ sudo systemctl restart chronyd
+$ sudo systemctl enable chronyd
+$ sudo systemctl status chronyd
+
+$ sudo systemctl restart chronyd
+
+$ sudo chronyc tracking
+$ sudo chronyc sources
+$ sudo chronyc sourcestats
+$ sudo systemctl status chronyd
+$ sudo chronyc activity
+$ sudo systemctl status -l chronyd
+
+$ sudo timedatectl			;show time status
+
+
+$ sudo chronyc makestep 	;manually align client with server
+
+
+# NTP local server configuration
+
+/etc/chrony.conf
+```
+driftfile /var/lib/chrony/drift
+commandkey 1
+keyfile /etc/chrony.keys
+initstepslew 10 client_name
+local stratum 8
+manual
+allow 192.168.1.0/24
+```
+
+
+
+# NTP local client configuration
+
+/etc/chrony.conf
+```
+server master_name
+driftfile /var/lib/chrony/drift
+logdir /var/log/chrony
+log measurements statistics tracking
+keyfile /etc/chrony.keys
+commandkey 24
+local stratum 10
+initstepslew 20 master
+allow 192.0.2.xxx
+```
 
 # Kill all process from one user
 killall --user name
@@ -506,7 +591,7 @@ $fuser -km ./
 
 
 
-# write image to usb
+# write image to usb and show the progress on the fly
 dd if=/mnt_nfsroot/sd_card.img of=/dev/mmcblk0 status=progress
 
 # See live dmesg log
@@ -583,3 +668,72 @@ $sudo mount -oloop,offset=1048576 ./sd_card.img /mnt/usb
 This should be useful for partition without occupied whole disk
 
 $dd bs=512 count=26509312 if=/dev/sdk of=devsdk.img
+
+
+# get smart information from centos 
+
+$sudo smartctl -a /dev/sda
+$sudo smartctl -a /dev/sda -d meagraid,1			;for dell raid card
+
+# memory shmget failed
+
+;query current configuration
+$sudo sysctl -A |grep shm
+
+$sudo sysctl -w kernel.shmmni = 8196  ;temperary
+
+;permanent change
+$ sudo vi /etc/sysctl.conf
+kernel.shmmni = 409600
+
+;reload 
+$sudo sysctl -p /etc/sysctl.conf 
+
+
+# Resize the partition and filesystem
+
+$sudo yum install gparted
+$sudo gparted
+
+
+# show memory usage
+$ free -m -h
+
+
+# stop and disable tracker 
+tracker daemon stop
+tracker daemon -k
+
+tracker status
+tracker daemon
+
+
+# increase supported threads number
+
+libgomp: Thread creation failed: Resource temporarily unavailable
+
+
+$ulimit -a
+```
+ore file size          (blocks, -c) 0
+data seg size           (kbytes, -d) unlimited
+scheduling priority             (-e) 0
+file size               (blocks, -f) unlimited
+pending signals                 (-i) 987408
+max locked memory       (kbytes, -l) 64
+max memory size         (kbytes, -m) unlimited
+open files                      (-n) 1024
+pipe size            (512 bytes, -p) 8
+POSIX message queues     (bytes, -q) 819200
+real-time priority              (-r) 0
+stack size              (kbytes, -s) 8192
+cpu time               (seconds, -t) unlimited
+max user processes              (-u) 4096
+virtual memory          (kbytes, -v) unlimited
+file locks                      (-x) unlimited
+```
+
+$ulimit -s 1024    ;change stack size from 8192 to 1024
+
+
+
